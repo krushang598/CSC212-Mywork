@@ -7,6 +7,7 @@
 #include <cctype>
 #include <algorithm>
 #include <string>
+#include <fstream>
 
 bool isNotAlnum(char c) {
     return isalnum(c) == 0;
@@ -81,24 +82,40 @@ int main()
 
     std::stack <std::string> reverse;
     std::queue <std::string> forward;
-    std::string fileLocation;
+    std::string filename;
 
     std::cout << "which file do you want to open?";
-    getline(std::cin, fileLocation);
+    getline(std::cin, filename);
 
-    std::ifstream test_data(fileLocation);
-    if(!test_data){
-        throw::std::runtime_error("Can't find test file;");}
+    while(filename != "quit")
+    {
+        std::ifstream test_data(filename);
+        if(!test_data)
+        {
+            throw::std::runtime_error("Can't find test file;");
+        }
         std::string line;
-        while(getline(test_data, line)){
+        while(getline(test_data, line))
+        {
             // load into data structure
-            //line.erase(std::remove_if(s.begin(), s.end(), (int(*)(int))std::isalnum), s.end());
             line.erase(std::remove_if(line.begin(), line.end(), isNotAlnum), line.end());
             reverse.push(line);
             forward.push(line);
         }    
+        
         test_data.close();
+
+        assert(reverse.size()==forward.size());
+        if(reverse.empty())
+        {
+            std::cout<<"The file you entered is empty. "
+            continue;
+        }
 
         std::cout<<"Checking using Stack: "<<ispalindromeStack(reverse)<<"\n";
         std::cout<<"Checking using Queue: "<<ispalindromeQueue(forward)<<"\n";
+
+        std::cout << "which file do you want to open?";
+        getline(std::cin, filename);
+    }
 }
